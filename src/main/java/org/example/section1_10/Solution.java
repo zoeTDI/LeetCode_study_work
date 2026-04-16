@@ -142,18 +142,13 @@ public class Solution {
     }
 
     public int lengthOfLongestSubstring(String s) {
-        if (s.length() < 2) return s.length();
-        HashMap<Character, Integer> map = new HashMap<>(127);
-        map.put(s.charAt(0), 0);
+        int[] nums = new int[128];
         int left = 0;
-        int max = 1 - left;
-        for (int i = 1; i < s.length(); i++) {
+        int max = 0;
+        for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (map.containsKey(ch)) {
-                left = Math.max(left, map.get(ch) + 1);
-            }
-            // update the character last of index
-            map.put(ch, i);
+            left = Math.max(left, nums[ch]);
+            nums[ch] = i + 1;
             max = Math.max(max, i - left + 1);
         }
         return max;
