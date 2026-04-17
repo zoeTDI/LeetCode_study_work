@@ -153,4 +153,62 @@ public class Solution {
         }
         return max;
     }
+
+    // https://leetcode.cn/problems/median-of-two-sorted-arrays/
+    // mark：很难
+    public void findMedianSortedArraysTest() {
+        // eg1
+        double rs1 = findMedianSortedArrays(new int[]{1, 3}, new int[]{2});
+        System.out.println(rs1);
+        // eg2
+        double rs2 = findMedianSortedArrays(new int[]{1, 2}, new int[]{3, 4});
+        System.out.println(rs2);
+        // eg3
+        double rs3 = findMedianSortedArrays(new int[]{}, new int[]{1});
+        System.out.println(rs3);
+        // eg4
+        double rs4 = findMedianSortedArrays(new int[]{1, 2, 3, 4, 5}, new int[]{6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17});
+        System.out.println(rs4);
+        // eg5
+        double rs5 = findMedianSortedArrays(new int[]{1, 5, 6, 7}, new int[]{2, 3, 4, 8});
+        System.out.println(rs5);
+
+    }
+
+    private int getVal(int i, int k, int[] nums1, int[] nums2) {
+        int v1 = (i <= 0) ? Integer.MIN_VALUE : nums1[i - 1];
+        int v2 = (k - i <= 0) ? Integer.MIN_VALUE : nums2[k - i - 1];
+        return Math.max(v1, v2);
+    }
+
+    private double findK(int k, int[] nums1, int[] nums2) {
+        int n1 = nums1.length, n2 = nums2.length;
+        int l = Math.max(0, k - n2);
+        int r = Math.min(k, n1);
+        while (r - l > 2) {
+            int m1 = l + (r - l) / 3;
+            int m2 = r - (r - l) / 3;
+            if (getVal(m1, k, nums1, nums2) < getVal(m2, k, nums1, nums2)) {
+                r = m2;
+            } else {
+                l = m1;
+            }
+        }
+        int minVal = Integer.MAX_VALUE;
+        for(int i = l; i <= r; i++) {
+            minVal = Math.min(minVal, getVal(i, k, nums1, nums2));
+        }
+        return minVal;
+    }
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int n1 = nums1.length, n2 = nums2.length;
+        int total = n1 + n2;
+
+        double k1 = findK((total + 1) / 2, nums1, nums2);
+        double k2 = findK((total + 2) / 2, nums1, nums2);
+
+        return (k1 + k2) / 2.0;
+    }
+
 }
